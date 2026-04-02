@@ -3,13 +3,45 @@ version: "3.9"
 services:
   solana-dev:
     build: .
+
     container_name: solana-dev
 
+    working_dir: /workspace
+
     volumes:
+      # Código
       - ./:/workspace
+
+      # Rust cache
+      - ./docker/cargo:/root/.cargo
+      - ./docker/cargo-registry:/root/.cargo/registry
+      - ./docker/cargo-git:/root/.cargo/git
+
+      # Solana CLI
+      - ./docker/solana:/root/.local/share/solana
+
+      # Anchor
+      - ./docker/avm:/root/.avm
+
+      # Wallet
+      - ./docker/solana-config:/root/.config/solana
+
+      # Node
+      - ./docker/node_modules:/workspace/node_modules
+
+    ports:
+      # Solana RPC (validator local)
+      - "8899:8899"
+
+      # WebSocket RPC
+      - "8900:8900"
+
+      # Faucet (airdrop local)
+      - "9900:9900"
 
     stdin_open: true
     tty: true
 
     environment:
       - RUST_BACKTRACE=1
+      - PATH=/root/.cargo/bin:/root/.local/share/solana/install/active_release/bin:/root/.avm/bin:$PATH
