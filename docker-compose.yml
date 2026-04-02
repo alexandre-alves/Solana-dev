@@ -1,0 +1,15 @@
+version: "3.9"
+
+services:
+  solana-dev:
+    build: .
+    container_name: solana-dev
+
+    volumes:
+      - ./:/workspace
+
+    stdin_open: true
+    tty: true
+
+    environment:
+      - RUST_BACKTRACE=1
